@@ -51,7 +51,7 @@ sudo cp /etc/samba/smb.conf /etc/samba/smb.conf.bak
 sudo nano /etc/samba/smb.conf
 ```
 ### **Add the following under the [global] section:**
-```edit
+```ini
 [Shared]
 path = /srv/shared
 browsable = yes
@@ -64,3 +64,57 @@ read only = no
 ```bash
 sudo systemctl restart smbd
 ```
+## **Configure User-Based Access (Optional)**
+### **Add a Samba user:**
+```bash
+sudo smbpasswd -a <username>
+```
+### **Replace <username> with the desired username.**
+### **Restrict the shared folder to this user:**
+```bash
+sudo chown <username>:<username> /srv/shared
+sudo chmod 770 /srv/shared
+```
+### **Update the [Shared] section in smb.conf:**
+```ini
+valid users = <username>
+```
+### **Restart Samba:**
+```bash
+sudo systemctl restart smbd
+```
+## **Testing Instructions**
+## **Verify Samba Setup**
+### **List available shares:**
+```bash
+smbclient -L localhost -U <username>
+```
+### **Replace <username> with the Samba username created earlier.**
+### **2. Test File Access**
+
+- **From Linux:**  
+  Use the `smbclient` tool:  
+  ```bash
+  smbclient //<server-ip>/Shared -U <username>
+  ```
+  ### **Replace <server-ip> with the IP address of the server.**
+  - **From Windows:**  
+  1. Open **File Explorer**.  
+  2. Enter `\\<server-ip>\Shared` in the address bar.  
+  3. Log in using the Samba username and password.
+## **Future Improvements**  
+
+1. **Encryption:**  
+   - Enable SMB3 protocol for encrypted file transfers.  
+
+2. **Multi-User Support:**  
+   - Add multiple user accounts with specific permissions.  
+
+3. **Logging and Monitoring:**  
+   - Enable detailed logs to track access and errors.  
+
+4. **Automated Setup Script:**  
+   - Create a Bash script to automate the entire setup process.  
+
+5. **Advanced Authentication:**  
+   - Integrate Samba with an LDAP server for centralized user management.
