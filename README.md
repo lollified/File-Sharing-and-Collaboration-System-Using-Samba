@@ -84,7 +84,7 @@ valid users = <username>
 sudo systemctl restart smbd
 ```
 ## **Testing Instructions**
-## **Verify Samba Setup**
+### **Verify Samba Setup**
 ### **List available shares:**
 ```bash
 smbclient -L localhost -U <username>
